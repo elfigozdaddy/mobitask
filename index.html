@@ -46,8 +46,7 @@
     <main class="flex-grow max-w-4xl w-full mx-auto px-4 py-6 flex flex-col">
         <!-- Tabs -->
         <div id="tabs-bar" class="flex items-center space-x-2 overflow-x-auto pb-3 mb-3 no-scrollbar"></div>
-        <!-- Filtro categorie -->
-        <div id="category-filter" class="flex flex-wrap gap-2 mb-5"></div>
+
         <!-- Lista task -->
         <div id="tasks-container" class="space-y-4 mb-6"></div>
         <!-- Pulsante nuovo task -->
@@ -216,7 +215,6 @@
 
         function renderAll() {
             renderTabs();
-            renderFilter();
             renderTasks();
         }
 
@@ -392,32 +390,7 @@
             return [...seen.values()].sort((a, b) => a.localeCompare(b, 'it'));
         }
 
-        function renderFilter() {
-            const box = document.getElementById('category-filter');
-            const cats = tabCategories(currentTab);
-            if (currentFilter && !cats.some(c => c.toLowerCase() === currentFilter.toLowerCase())) currentFilter = null;
-
-            if (cats.length === 0) { box.innerHTML = ''; return; }
-
-            box.innerHTML = '';
-            const makeChip = (label, value, active) => {
-                const b = document.createElement('button');
-                b.type = 'button';
-                b.textContent = label;
-                b.onclick = () => setFilter(value);
-                b.className = `text-xs font-medium px-3 py-1.5 rounded-full border transition-colors ${
-                    active ? 'bg-slate-800 text-white border-slate-800' : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-100'}`;
-                box.appendChild(b);
-            };
-            makeChip('Tutte', null, currentFilter === null);
-            cats.forEach(c => makeChip(c, c, currentFilter !== null && currentFilter.toLowerCase() === c.toLowerCase()));
-        }
-
-        function setFilter(value) {
-            currentFilter = value;
-            renderFilter();
-            renderTasks();
-        }
+        
 
         // ---------- Task Management ----------
         function renderTasks() {
