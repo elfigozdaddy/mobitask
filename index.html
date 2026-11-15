@@ -48,7 +48,7 @@
         <div id="tabs-bar" class="flex items-center space-x-2 overflow-x-auto pb-3 mb-3 no-scrollbar"></div>
 
         <!-- Lista task -->
-        <div id="tasks-container" class="space-y-4 mb-6"></div>
+        <div id="tasks-container" class="space-y-3 mb-6"></div>
         <!-- Pulsante nuovo task -->
         <div class="mt-auto pt-4 pb-12 flex justify-center">
             <button type="button" onclick="openModal()" class="group relative inline-flex items-center justify-center p-0.5 mb-2 overflow-hidden text-sm font-medium rounded-full bg-gradient-to-br from-cyan-600 to-blue-600 text-white shadow-lg hover:shadow-cyan-500/25 transition-all duration-300">
@@ -418,7 +418,7 @@
 
             list.forEach(task => {
                 const card = document.createElement('div');
-                card.className = `bg-white rounded-3xl p-5 border border-slate-100 custom-shadow card-hover flex items-start space-x-4 ${task.completed ? 'opacity-60 bg-slate-50/50' : ''}`;
+                card.className = `bg-white rounded-3xl p-4 border border-slate-100 custom-shadow card-hover flex items-start space-x-4 ${task.completed ? 'opacity-60 bg-slate-50/50' : ''}`;
 
                 const badge = task.category ? `
                     <span class="text-[11px] font-medium px-2.5 py-1 rounded-full border ${categoryColor(task.category)} flex items-center space-x-1 shrink-0 ml-2">
