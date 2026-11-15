@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="it">
+<html lang="it" data-theme="day">
 <head>
     <link rel="apple-touch-icon" href="mobitask-icona.png">
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#0284c7">
+    <meta name="theme-color" content="#4F7C6E">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/3097/3097480.png">
@@ -11,16 +11,65 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mobitask - Task & Mobilità</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif; }
-        .custom-shadow { box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05); }
-        .card-hover { transition: all 0.2s ease-in-out; }
-        .card-hover:hover { transform: translateY(-2px); box-shadow: 0 15px 30px -5px rgba(14, 116, 144, 0.1); }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        .ico { display: inline-block; vertical-align: middle; flex-shrink: 0; }
-    </style>
+<script>
+const rgb = n => `rgb(var(--${n}) / <alpha-value>)`;
+const sc = (n, a) => Object.fromEntries(a.map(s => [s, rgb(n + '-' + s)]));
+tailwind.config = { theme: { extend: { colors: {
+  slate: sc('slate', [50,100,200,300,400,500,600,700,800,900]),
+  cyan: sc('cyan', [50,100,200,300,400,500,600,700]),
+  blue: sc('blue', [50,100,600,700]),
+  indigo: sc('indigo', [50,100,700]), emerald: sc('emerald', [50,100,700]), amber: sc('amber', [50,100,700]),
+  violet: sc('violet', [50,100,700]), teal: sc('teal', [50,100,700]), rose: sc('rose', [50,100,600,700])
+}}}};
+/* Stesso criterio della dashboard: notte dalle 21 alle 7, oppure ?theme=night / ?theme=day */
+function applyTheme() {
+  const q = new URLSearchParams(location.search).get('theme'), h = new Date().getHours();
+  document.documentElement.dataset.theme = q || ((h >= 21 || h < 7) ? 'night' : 'day');
+}
+applyTheme(); setInterval(applyTheme, 60000);
+</script>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300..400&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --card:255 255 255;
+  --slate-50:236 241 237;--slate-100:230 237 233;--slate-200:216 225 221;--slate-300:188 200 195;--slate-400:141 156 150;
+  --slate-500:102 119 111;--slate-600:82 99 92;--slate-700:63 79 73;--slate-800:47 64 59;--slate-900:31 44 40;
+  --cyan-50:237 243 240;--cyan-100:220 232 227;--cyan-200:194 214 206;--cyan-300:163 191 180;--cyan-400:134 169 155;--cyan-500:106 146 131;--cyan-600:79 124 110;--cyan-700:63 102 90;
+  --blue-50:238 242 246;--blue-100:221 230 238;--blue-600:91 127 140;--blue-700:74 107 119;
+  --indigo-50:240 239 245;--indigo-100:226 224 236;--indigo-700:94 90 122;
+  --emerald-50:239 243 232;--emerald-100:224 232 210;--emerald-700:92 111 62;
+  --amber-50:246 240 226;--amber-100:237 227 201;--amber-700:122 100 48;
+  --violet-50:242 238 244;--violet-100:229 220 234;--violet-700:110 86 121;
+  --teal-50:234 243 242;--teal-100:213 231 229;--teal-700:63 116 112;
+  --rose-50:246 236 234;--rose-100:237 218 214;--rose-600:165 96 90;--rose-700:142 77 72;
+}
+[data-theme="night"]{
+  --card:38 53 54;
+  --slate-50:28 40 41;--slate-100:46 62 62;--slate-200:62 80 78;--slate-300:85 105 101;--slate-400:130 148 142;
+  --slate-500:150 166 160;--slate-600:176 190 184;--slate-700:200 211 206;--slate-800:216 226 221;
+  --cyan-50:44 60 58;--cyan-700:160 200 186;--blue-50:44 60 58;--blue-100:56 74 71;--blue-700:170 196 214;
+  --indigo-50:44 60 58;--indigo-100:56 74 71;--indigo-700:188 184 224;
+  --emerald-50:44 60 58;--emerald-100:56 74 71;--emerald-700:184 204 150;
+  --amber-50:44 60 58;--amber-100:56 74 71;--amber-700:214 192 140;
+  --violet-50:44 60 58;--violet-100:56 74 71;--violet-700:205 180 218;
+  --teal-50:44 60 58;--teal-100:56 74 71;--teal-700:150 205 200;
+  --rose-50:60 44 44;--rose-100:74 52 52;--rose-700:210 150 144;
+}
+body{font-family:'Figtree',system-ui,-apple-system,'Segoe UI',sans-serif;transition:background-color 2s,color 2s}
+h1,h3{font-family:'Fraunces','Iowan Old Style',Georgia,serif;font-weight:400!important;letter-spacing:0!important}
+h1{font-size:1.9rem!important}
+label{text-transform:none!important;letter-spacing:0!important;font-size:.82rem!important;font-weight:500!important}
+.bg-white,.focus\:bg-white:focus{background-color:rgb(var(--card))!important}
+.custom-shadow{box-shadow:0 1px 2px rgba(47,64,59,.04),0 18px 40px -18px rgba(47,64,59,.2)}
+[data-theme="night"] .custom-shadow{box-shadow:0 18px 40px -18px rgba(0,0,0,.5)}
+.card-hover{transition:all .2s ease-in-out}
+.card-hover:hover{transform:translateY(-1px);box-shadow:0 18px 36px -14px rgba(79,124,110,.25)}
+[data-theme="night"] span.rounded-full.border{border-color:transparent}
+.no-scrollbar::-webkit-scrollbar{display:none}
+.no-scrollbar{-ms-overflow-style:none;scrollbar-width:none}
+.ico{display:inline-block;vertical-align:middle;flex-shrink:0}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
 </head>
 <body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
 
