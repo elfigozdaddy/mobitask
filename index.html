@@ -21,12 +21,36 @@ tailwind.config = { theme: { extend: { colors: {
   indigo: sc('indigo', [50,100,700]), emerald: sc('emerald', [50,100,700]), amber: sc('amber', [50,100,700]),
   violet: sc('violet', [50,100,700]), teal: sc('teal', [50,100,700]), rose: sc('rose', [50,100,600,700])
 }}}};
-/* Stesso criterio della dashboard: notte dalle 21 alle 7, oppure ?theme=night / ?theme=day */
-function applyTheme() {
-  const q = new URLSearchParams(location.search).get('theme'), h = new Date().getHours();
-  document.documentElement.dataset.theme = q || ((h >= 21 || h < 7) ? 'night' : 'day');
+/* Temi: li riceve dalla dashboard (?theme=... o postMessage). Da solo: notte dalle 21 alle 7. */
+const TH = {
+  primavera: { bg: '243 245 233', card: '255 255 255', ink: '51 67 47', acc: '79 127 63', acc2: '58 130 110' },
+  estate: { bg: '238 244 242', card: '255 255 255', ink: '36 62 70', acc: '58 126 142', acc2: '64 110 160' },
+  autunno: { bg: '244 238 229', card: '255 252 247', ink: '66 51 42', acc: '154 90 51', acc2: '176 110 60' },
+  inverno: { bg: '238 242 247', card: '255 255 255', ink: '43 58 78', acc: '76 108 152', acc2: '90 125 150' },
+  natale: { dark: 1, bg: '20 41 31', card: '30 54 43', ink: '242 236 221', acc: '150 45 50', acc2: '38 90 70', hi: '217 178 106' }
+};
+const mix = (a, b, t) => { const x = a.split(' '), y = b.split(' '); return x.map((v, i) => Math.round(v * (1 - t) + y[i] * t)).join(' '); };
+const STEPS = { 100: .06, 200: .13, 300: .3, 400: .5, 500: .62, 600: .74, 700: .86 };
+let forced = new URLSearchParams(location.search).get('theme');
+function applyTheme(name) {
+  const root = document.documentElement, st = root.style, h = new Date().getHours();
+  if (name) forced = name;
+  const t = forced || ((h >= 21 || h < 7) ? 'night' : 'day'), th = TH[t];
+  root.dataset.theme = (t === 'night' || (th && th.dark)) ? 'night' : 'day';
+  [...st].filter(k => k.startsWith('--')).forEach(k => st.removeProperty(k));
+  if (!th) return;
+  const set = (k, v) => st.setProperty('--' + k, v);
+  set('card', th.card); set('slate-50', th.bg); set('slate-800', th.ink);
+  for (const k in STEPS) set('slate-' + k, mix(th.bg, th.ink, STEPS[k]));
+  set('cyan-600', th.acc); set('blue-600', th.acc2);
+  set('cyan-50', mix(th.dark ? th.bg : th.card, th.acc2, th.dark ? .25 : .1));
+  set('cyan-700', th.dark ? th.hi : mix(th.acc, th.ink, .3));
 }
-applyTheme(); setInterval(applyTheme, 60000);
+window.addEventListener('message', e => {
+  const t = e.data && e.data.theme;
+  if (typeof t === 'string' && (TH[t] || t === 'day' || t === 'night')) applyTheme(t);
+});
+applyTheme(); setInterval(() => { if (!forced) applyTheme(); }, 60000);
 </script>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300..400&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
